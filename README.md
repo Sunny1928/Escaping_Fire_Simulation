@@ -28,4 +28,4 @@ FIRE_TICKS = 2 # Determine how often the fire spreads
 
 
 ## Usage
-Update /src/agentBase.py
+Update /src/agent_base.py
