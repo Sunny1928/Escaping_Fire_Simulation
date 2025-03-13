@@ -1,3 +1,4 @@
+import time
 from src.agent_base import AgentBase
 from src.agent_mcts import AgentMCTS
 from src.fire import Fire
@@ -25,6 +26,8 @@ class Game:
             # Check if the game is ended
             if self.__check_end():
                 break
+
+            time.sleep(0.5)
             
             # Update each agent position
             new_agents = []

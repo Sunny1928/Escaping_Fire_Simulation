@@ -11,10 +11,10 @@ Status
 """
 
 move_dict = {
-    0: 'up',
-    1: 'left',
-    2: 'down',
-    3: 'right',
+    'up': (-1, 0),
+    'left': (0, -1),
+    'down': (1, 0),
+    'right': (0, 1),
 }
 
 
@@ -67,6 +67,9 @@ class AgentBase:
         """ Move Agent and return agent status (0: Dead, 1: Alive, 2: Safe)"""
         # get the move of the agent 
         self.move = self.get_move()
+        # print(self.move)
+        new_position = (self.agent_position[0] + move_dict[self.move][0], self.agent_position[1] + move_dict[self.move][1])
+        self.agent_position = new_position
 
         # Update the status of agent
         status = 1 # Alive
