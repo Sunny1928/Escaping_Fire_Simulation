@@ -1,4 +1,5 @@
 from src.game import Game
+from copy import deepcopy
 
 # Define game constants
 SAFE_ZONE = "S"
@@ -31,4 +32,18 @@ game_map = [
     ['=', 'S', ' ', ' ', ' ', 'P', ' ', ' ', '=', '=', 'P', ' ', ' ', ' ', ' ', ' ', ' ', 'S', '='],
     ['=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=']]
 
-Game(game_map).run()
+
+times = 5
+method = "Random"
+
+res_tick = []
+res_safe = []
+for _ in range(times):
+    tick, safe = Game(deepcopy(game_map), method).run()
+    res_tick.append(tick)
+    res_safe.append(safe)
+
+print(f"Method: {method}")
+print(f"Average Saved Agent: {round(sum(res_safe)/times, 2)}")
+print(f"Average Time: {round(sum(res_tick)/times, 2)}")
+

@@ -9,10 +9,12 @@ FIRE_TICKS = 2 # Determine how often the fire spreads
 
 
 class Game:
-    def __init__(self, game_map):
+    def __init__(self, game_map, method='Random'):
         self.game_map, agent_positions, fire_positions, self.safety_positions = self.__read_map(game_map)
-        self.agents = [AgentBase(self.game_map, pos, self.safety_positions) for pos in agent_positions]  # Use based Agent
-        # self.agents = [AgentMCTS(self.game_map, pos, self.safety_positions) for pos in agent_positions]  # Use MCTS-based Agent
+        if method == 'Random':
+            self.agents = [AgentBase(self.game_map, pos, self.safety_positions) for pos in agent_positions]  # Use based Agent
+        elif method == 'MCTS':
+            self.agents = [AgentMCTS(self.game_map, pos, self.safety_positions, simulations=100, end_ticks = 20) for pos in agent_positions]  # Use MCTS-based Agent
         self.agent_num = len(self.agents) # Number of agents
         self.fire = Fire(self.game_map, fire_positions)
         self.ticks = 0
@@ -25,7 +27,7 @@ class Game:
         while True:
             # Check if the game is ended
             if self.__check_end():
-                break
+                return self.ticks, self.safe/self.agent_num
 
             time.sleep(0.5)
             

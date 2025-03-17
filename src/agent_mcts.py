@@ -45,12 +45,13 @@ class MCTSNode:
         return [action for action, _ in valid_moves if action not in self.children]
 
 class AgentMCTS:
-    def __init__(self, game_map, agent_position, safety_positions, simulations=100):
+    def __init__(self, game_map, agent_position, safety_positions, simulations=100, end_ticks=10):
         self.game_map = game_map
         self.agent_position = agent_position
         self.safety_positions = safety_positions
         self.fire_positions = None
         self.simulations = simulations
+        self.end_ticks = end_ticks
 
     def get_valid_moves(self, position):
         """ Get all possible moves from the current position """
@@ -91,7 +92,7 @@ class AgentMCTS:
 
         return reward
 
-    def simulate(self, position, depth = 3):
+    def simulate(self, position, depth):
         """ Perform a random rollout (simulation) from the given position """
         total_reward = 0
         for _ in range(depth):  # Simulate up to 10 steps ahead
@@ -143,7 +144,7 @@ class AgentMCTS:
                 state = next_position
 
             # Simulation: Perform a rollout from the new state
-            reward = self.simulate(state)
+            reward = self.simulate(state, self.end_ticks)
 
             # Backpropagation: Update values in the tree
             self.backpropagate(node, reward)
