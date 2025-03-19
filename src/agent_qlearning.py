@@ -68,7 +68,7 @@ class AgentQLearning:
 
     def learn(self, fire, agent_id, fire_ticks, episodes=200, max_steps_per_episode=100):
         """Train agent via Q-learning."""
-        print(f'Agent {agent_id} start learning!')
+        print(f'Agent {agent_id} start learning! Learn {episodes} episodes')
         for episode in range(episodes):
             state = tuple(self.agent_position)  # Start at initial position
             fire_cpy = copy.deepcopy(fire)

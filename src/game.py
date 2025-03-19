@@ -11,16 +11,16 @@ FIRE_TICKS = 2 # Determine how often the fire spreads
 
 
 class Game:
-    def __init__(self, game_map, method='Random'):
+    def __init__(self, game_map, method='Random', rollout=100, end_ticks=7):
         self.game_map, agent_positions, fire_positions, self.safety_positions = self.__read_map(game_map)
         if method == 'Random':
             self.agents = [AgentBase(self.game_map, pos, self.safety_positions) for pos in agent_positions]  # Use based Agent
         elif method == 'MCTS':
-            self.agents = [AgentMCTS(self.game_map, pos, self.safety_positions, simulations=100, end_ticks = 20) for pos in agent_positions]  # Use MCTS-based Agent
+            self.agents = [AgentMCTS(self.game_map, pos, self.safety_positions, simulations=rollout, end_ticks = end_ticks) for pos in agent_positions]  # Use MCTS-based Agent
         elif method == 'Qlearning':
             self.agents = [AgentQLearning(self.game_map, pos, self.safety_positions) for pos in agent_positions]
             with concurrent.futures.ThreadPoolExecutor() as executor:
-                futures = [executor.submit(agent.learn, Fire(self.game_map, fire_positions), i, FIRE_TICKS) for i, agent in enumerate(self.agents)]
+                futures = [executor.submit(agent.learn, Fire(self.game_map, fire_positions), i, FIRE_TICKS, rollout) for i, agent in enumerate(self.agents)]
                 concurrent.futures.wait(futures)  # Wait for all agents to finish
 
         self.agent_num = len(self.agents) # Number of agents
@@ -36,9 +36,9 @@ class Game:
         while True:
             # Check if the game is ended
             if self.__check_end():
-                return self.ticks, self.safe/self.agent_num, self.total_distance_traveled
+                return self.ticks, self.safe, self.agent_num, self.total_distance_traveled
 
-            time.sleep(0.5)
+            # time.sleep(0.5)
             
             # Update each agent position
             new_agents = []
