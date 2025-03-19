@@ -2,24 +2,8 @@ import numpy as np
 import random
 import math
 from collections import defaultdict
+from src.agent_base import WALL, ACTIONS, DIRECTION_MAP
 
-# Define game constants
-WALL = "="
-
-# Actions Mapping
-ACTIONS = {
-    0: "up",
-    1: "down",
-    2: "left",
-    3: "right"
-}
-
-DIRECTION_MAP = {
-    "up": (-1, 0),
-    "down": (1, 0),
-    "left": (0, -1),
-    "right": (0, 1)
-}
 
 class MCTSNode:
     def __init__(self, state, parent=None):
@@ -52,6 +36,7 @@ class AgentMCTS:
         self.fire_positions = None
         self.simulations = simulations
         self.end_ticks = end_ticks
+        self.distance_traveled = 0
 
     def get_valid_moves(self, position):
         """ Get all possible moves from the current position """
@@ -159,6 +144,7 @@ class AgentMCTS:
         action = self.select_action()
         new_position = (self.agent_position[0] + DIRECTION_MAP[ACTIONS[action]][0], self.agent_position[1] + DIRECTION_MAP[ACTIONS[action]][1])
         self.agent_position = new_position
+        self.distance_traveled += 1
        
         status = 1 # Alive
         if self.agent_position in self.fire_positions:

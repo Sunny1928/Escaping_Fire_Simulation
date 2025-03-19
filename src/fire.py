@@ -26,6 +26,18 @@ class Fire:
 
         return possibilities
 
+    def expand(self):
+        """ Expand fire in all four directions Used for QLearning training"""
+        # Update the fire positions
+        new_fire_positions = set()
+        for fire_position in self.fire_positions:
+            possible_positions = self.__get_fire_expansion_possibilities(fire_position)
+            for new_position in possible_positions:
+                new_fire_positions.add(new_position)
+                self.seen.add(new_position)
+
+        self.fire_positions.update(new_fire_positions)  # Update fire positions list
+
     def move_fire(self, agent_agents):
         """ Expand fire in all four directions """
         # Update the fire positions

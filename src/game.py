@@ -1,9 +1,11 @@
 import time
 from src.agent_base import AgentBase
 from src.agent_mcts import AgentMCTS
+from src.agent_qlearning import AgentQLearning
 from src.fire import Fire
 import os
 from copy import deepcopy
+import concurrent.futures
 
 FIRE_TICKS = 2 # Determine how often the fire spreads
 
@@ -15,19 +17,26 @@ class Game:
             self.agents = [AgentBase(self.game_map, pos, self.safety_positions) for pos in agent_positions]  # Use based Agent
         elif method == 'MCTS':
             self.agents = [AgentMCTS(self.game_map, pos, self.safety_positions, simulations=100, end_ticks = 20) for pos in agent_positions]  # Use MCTS-based Agent
+        elif method == 'Qlearning':
+            self.agents = [AgentQLearning(self.game_map, pos, self.safety_positions) for pos in agent_positions]
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                futures = [executor.submit(agent.learn, Fire(self.game_map, fire_positions), i, FIRE_TICKS) for i, agent in enumerate(self.agents)]
+                concurrent.futures.wait(futures)  # Wait for all agents to finish
+
         self.agent_num = len(self.agents) # Number of agents
         self.fire = Fire(self.game_map, fire_positions)
         self.ticks = 0
         self.safe = 0 # Number of safe agents
         self.dead = 0 # Number of dead agents
+        self.total_distance_traveled = 0
 
     def run(self):
         """ Run the game"""
-
+        
         while True:
             # Check if the game is ended
             if self.__check_end():
-                return self.ticks, self.safe/self.agent_num
+                return self.ticks, self.safe/self.agent_num, self.total_distance_traveled
 
             time.sleep(0.5)
             
@@ -42,6 +51,7 @@ class Game:
                 elif agent_status == 1: # Alive
                     new_agents.append(agent)
                 elif agent_status == 2: # Saved
+                    self.total_distance_traveled += self.agents[i].distance_traveled
                     self.safe += 1
 
             self.agents = new_agents
@@ -102,7 +112,7 @@ class Game:
         output_map = self.__get_output_map()
         qnt_lines = len(output_map)
         qnt_columns = len(output_map[0])
-        print(f"Ticks: {self.ticks}, Safe: {self.safe}, Dead: {self.dead}")
+        print(f"Ticks: {self.ticks}, Safe: {self.safe}, Dead: {self.dead}, Objective Function: {self.total_distance_traveled}")
         for i in range(qnt_lines):
             for j in range(qnt_columns):
                 print(output_map[i][j], end=" ")

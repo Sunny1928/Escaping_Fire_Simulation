@@ -32,18 +32,20 @@ game_map = [
     ['=', 'S', ' ', ' ', ' ', 'P', ' ', ' ', '=', '=', 'P', ' ', ' ', ' ', ' ', ' ', ' ', 'S', '='],
     ['=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=', '=']]
 
-
-times = 5
-method = "Random"
+times = 1
+method = "Qlearning"
 
 res_tick = []
 res_safe = []
+objective = []
 for _ in range(times):
-    tick, safe = Game(deepcopy(game_map), method).run()
+    tick, safe, obj = Game(deepcopy(game_map), method).run()
     res_tick.append(tick)
     res_safe.append(safe)
+    objective.append(obj)
 
 print(f"Method: {method}")
 print(f"Average Saved Agent: {round(sum(res_safe)/times, 2)}")
 print(f"Average Time: {round(sum(res_tick)/times, 2)}")
+print(f"Objective function: {round(sum(objective) / len(objective))}")
 

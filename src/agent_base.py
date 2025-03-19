@@ -3,6 +3,22 @@ from random import choice
 # Define game constants
 WALL = "="
 
+# Actions Mapping
+ACTIONS = {
+    0: "up",
+    1: "down",
+    2: "left",
+    3: "right"
+}
+
+DIRECTION_MAP = {
+    "up": (-1, 0),
+    "down": (1, 0),
+    "left": (0, -1),
+    "right": (0, 1)
+}
+
+
 """
 Status
 0: dead
@@ -24,6 +40,7 @@ class AgentBase:
         self.agent_position = agent_position
         self.safety_positions = safety_positions
         self.move = None
+        self.distance_traveled = 0
 
     @property
     def next_agent_position_location(self):
@@ -70,6 +87,7 @@ class AgentBase:
         # print(self.move)
         new_position = (self.agent_position[0] + move_dict[self.move][0], self.agent_position[1] + move_dict[self.move][1])
         self.agent_position = new_position
+        self.distance_traveled += 1
 
         # Update the status of agent
         status = 1 # Alive
