@@ -2,6 +2,7 @@ import time
 from src.agent_base import AgentBase
 from src.agent_mcts import AgentMCTS
 from src.agent_qlearning import AgentQLearning
+from src.agent_astar import AgentAStar 
 from src.fire import Fire
 import os
 from copy import deepcopy
@@ -22,6 +23,8 @@ class Game:
             with concurrent.futures.ThreadPoolExecutor() as executor:
                 futures = [executor.submit(agent.learn, Fire(self.game_map, fire_positions), i, FIRE_TICKS, rollout) for i, agent in enumerate(self.agents)]
                 concurrent.futures.wait(futures)  # Wait for all agents to finish
+        elif method == 'AStar':
+            self.agents = [AgentAStar(self.game_map, pos, self.safety_positions) for pos in agent_positions]
 
         self.agent_num = len(self.agents) # Number of agents
         self.fire = Fire(self.game_map, fire_positions)
@@ -38,7 +41,7 @@ class Game:
             if self.__check_end():
                 return self.ticks, self.safe, self.agent_num, self.total_distance_traveled
 
-            # time.sleep(0.5)
+            time.sleep(0.5)
             
             # Update each agent position
             new_agents = []

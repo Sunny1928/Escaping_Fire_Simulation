@@ -39,9 +39,9 @@ def parse_args():
     parser.add_argument(
         "--method", 
         type=str, 
-        choices=["MCTS", "Random", "Qlearning"], 
+        choices=["MCTS", "Random", "Qlearning", "AStar"], 
         required=True, 
-        help="Choose the method: MCTS, Random, or Qlearning"
+        help="Choose the method: MCTS, Random, Astar, or Qlearning"
     )
     parser.add_argument(
         "--rollout", 
