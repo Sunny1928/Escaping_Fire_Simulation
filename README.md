@@ -4,13 +4,14 @@ A Python-based terminal simulation where agents attempt to escape a spreading fi
 
 ## **Overview**
 
-This project simulates a fire evacuation scenario where multiple agents attempt to escape from a fire using different decision-making methods. The implemented methods include random movement, Monte Carlo Tree Search (MCTS), and Q-learning.
+This project simulates a fire evacuation scenario where multiple agents attempt to escape from a fire using different decision-making methods. The implemented methods include random movement, A-Star heuristic search, Monte Carlo Tree Search (MCTS), and Q-learning.
 
 ## **Methods**
 
 - **Random**: Agents move arbitrarily without strategic planning.
 - **MCTS (Monte Carlo Tree Search)**: Agents use a search-based approach to determine optimal moves.
 - **Q-learning**: Agents learn optimal escape strategies through reinforcement learning.
+- **A-Star**: Agents will use A* to find a trajectory towards the nearest exit at every tick while also maintaining safe distance from fires.
 
 ## Run the simulation
 
@@ -22,7 +23,7 @@ python main.py --method <METHOD> --rollout <EPOCHS> --end_ticks <TICKS> --iter <
 
 ### Arguments:
 
-- `--method`: Choose from `MCTS`, `Random`, or `Qlearning`. (Required)
+- `--method`: Choose from `MCTS`, `Random`, `AStar` or `Qlearning`. (Required)
 - `--rollout`: Number of epochs for training MCTS and Q-learning. (Default: 100)
 - `--end_ticks`: End tick for MCTS. (Default: 7)
 - `--iter`: Number of iterations to average performance. (Default: 10)
